@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <rect width="40" height="40" x="4" y="4" rx="10" fill="#4f46e5" fill-opacity="0.1" stroke="#4f46e5" stroke-width="2"/>
+  <path d="M14 16h8v8h-8zM26 16h8v8h-8zM14 28h8v8h-8zM26 28h8v8h-8z" fill="#4f46e5" fill-opacity="0.8"/>
+  <circle cx="24" cy="24" r="3" fill="#ffffff"/>
+  <text x="56" y="29" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="currentColor" letter-spacing="-0.5">Akoh<tspan fill="#4f46e5">Grid</tspan></text>
+</svg>
