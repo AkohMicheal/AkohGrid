@@ -69,7 +69,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
                 handleProductType({ type: "size", value: e.target.value })
               }
             >
-              {product.sizes.map((size) => (
+              {product.sizes.map((size: string) => (
                 <option key={size} value={size}>
                   {size.toUpperCase()}
                 </option>
@@ -80,7 +80,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
           <div className="flex flex-col gap-1">
             <span className="text-gray-500">Color</span>
             <div className="flex items-center gap-2">
-              {product.colors.map((color) => (
+              {product.colors.map((color: string) => (
                 <div
                   className={`cursor-pointer border-1 ${
                     productTypes.color === color
