@@ -2,6 +2,7 @@
 
 > An enterprise microservices e-commerce and supply-chain platform engineered with Next.js 15 (App Router), an Apache Kafka event bus, dual-gateway payment reconciliation (Stripe & Paystack), and a unified PostgreSQL / Drizzle ORM relational layer.
 
+[![Live Demo](https://img.shields.io/badge/Demo-akoh--grid.vercel.app-000000?style=flat-square&logo=vercel&logoColor=white)](https://akoh-grid.vercel.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Turborepo](https://img.shields.io/badge/Turborepo-Monorepo-ef4444?style=flat-square&logo=turborepo&logoColor=white)](https://turbo.build/)
 [![Next.js 15](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
