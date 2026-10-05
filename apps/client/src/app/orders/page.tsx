@@ -1,21 +1,31 @@
 import { auth } from "@clerk/nextjs/server";
 import { OrderType } from "@repo/types";
 
-const fetchOrders = async () => {
-  const { getToken } = await auth();
-  const token = await getToken();
+const fetchOrders = async (): Promise<OrderType[]> => {
+  try {
+    const { getToken } = await auth();
+    const token = await getToken();
+    const serviceUrl = process.env.NEXT_PUBLIC_ORDER_SERVICE_URL;
+    if (!serviceUrl) {
+      return [];
+    }
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_ORDER_SERVICE_URL}/user-orders`,
-    {
+    const res = await fetch(`${serviceUrl}/user-orders`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
+    });
 
-  const data: OrderType[] = await res.json();
-  return data;
+    if (!res.ok) {
+      return [];
+    }
+
+    const data: OrderType[] = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.warn("Order service offline or unauthenticated:", error);
+    return [];
+  }
 };
 
 const OrdersPage = async () => {

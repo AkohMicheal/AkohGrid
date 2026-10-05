@@ -137,8 +137,52 @@ import Filter from "./Filter";
 //     categorySlug: "test",
 //     createdAt: new Date(),
 //     updatedAt: new Date(),
-//   },
-// ];
+import { mockProducts } from "@/lib/mockData";
+
+const getFilteredMockProducts = ({
+  category,
+  sort,
+  search,
+  params,
+}: {
+  category?: string;
+  sort?: string;
+  search?: string;
+  params: "homepage" | "products";
+}) => {
+  let list = [...mockProducts];
+  if (category && category !== "all") {
+    list = list.filter(
+      (p) => p.categorySlug.toLowerCase() === category.toLowerCase()
+    );
+  }
+  if (search) {
+    list = list.filter(
+      (p) =>
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.description.toLowerCase().includes(search.toLowerCase())
+    );
+  }
+  if (sort === "asc") {
+    list.sort((a, b) => a.price - b.price);
+  } else if (sort === "desc") {
+    list.sort((a, b) => b.price - a.price);
+  } else if (sort === "oldest") {
+    list.sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+  } else {
+    list.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+  if (params === "homepage") {
+    return list.slice(0, 8);
+  }
+  return list;
+};
 
 const fetchData = async ({
   category,
@@ -151,11 +195,26 @@ const fetchData = async ({
   search?: string;
   params: "homepage" | "products";
 }) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products?${category ? `category=${category}` : ""}${search ? `&search=${search}` : ""}&sort=${sort || "newest"}${params === "homepage" ? "&limit=8" : ""}`
-  );
-  const data: ProductType[] = await res.json();
-  return data;
+  const serviceUrl = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL;
+  if (!serviceUrl) {
+    return getFilteredMockProducts({ category, sort, search, params });
+  }
+
+  try {
+    const res = await fetch(
+      `${serviceUrl}/products?${category ? `category=${category}` : ""}${search ? `&search=${search}` : ""}&sort=${sort || "newest"}${params === "homepage" ? "&limit=8" : ""}`
+    );
+    if (!res.ok) {
+      return getFilteredMockProducts({ category, sort, search, params });
+    }
+    const data = await res.json();
+    return Array.isArray(data) && data.length > 0
+      ? data
+      : getFilteredMockProducts({ category, sort, search, params });
+  } catch (error) {
+    console.warn("Product service offline or unreachable, using fallback:", error);
+    return getFilteredMockProducts({ category, sort, search, params });
+  }
 };
 const ProductList = async ({
   category,

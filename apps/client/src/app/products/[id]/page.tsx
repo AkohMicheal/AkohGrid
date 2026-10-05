@@ -1,34 +1,26 @@
 import ProductInteraction from "@/components/ProductInteraction";
+import { mockProducts } from "@/lib/mockData";
 import { ProductType } from "@repo/types";
 import Image from "next/image";
 
-// TEMPORARY
-// const product: ProductType = {
-//   id: 1,
-//   name: "Adidas CoreFit T-Shirt",
-//   shortDescription:
-//     "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-//   description:
-//     "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-//   price: 59.9,
-//   sizes: ["xs", "s", "m", "l", "xl"],
-//   colors: ["gray", "purple", "green"],
-//   images: {
-//     gray: "/products/1g.png",
-//     purple: "/products/1p.png",
-//     green: "/products/1gr.png",
-//   },
-//   categorySlug: "test",
-//   createdAt: new Date(),
-//   updatedAt: new Date(),
-// };
-
-const fetchProduct = async (id: string) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products/${id}`
-  );
-  const data: ProductType = await res.json();
-  return data;
+const fetchProduct = async (id: string): Promise<ProductType> => {
+  const serviceUrl = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL;
+  if (!serviceUrl) {
+    return mockProducts.find((p) => p.id === Number(id)) || mockProducts[0]!;
+  }
+  try {
+    const res = await fetch(`${serviceUrl}/products/${id}`);
+    if (!res.ok) {
+      return mockProducts.find((p) => p.id === Number(id)) || mockProducts[0]!;
+    }
+    const data: ProductType = await res.json();
+    return data && data.name
+      ? data
+      : mockProducts.find((p) => p.id === Number(id)) || mockProducts[0]!;
+  } catch (error) {
+    console.warn("Product service offline, using fallback:", error);
+    return mockProducts.find((p) => p.id === Number(id)) || mockProducts[0]!;
+  }
 };
 
 export const generateMetadata = async ({
@@ -36,7 +28,7 @@ export const generateMetadata = async ({
 }: {
   params: Promise<{ id: string }>;
 }) => {
-    const { id } = await params;
+  const { id } = await params;
 
   const product = await fetchProduct(id);
   return {
@@ -65,7 +57,8 @@ const ProductPage = async ({
       <div className="w-full lg:w-5/12 relative aspect-[2/3]">
         <Image
           src={
-            (product.images as Record<string, string>)?.[selectedColor] || ""
+            (product.images as Record<string, string>)?.[selectedColor] ||
+            "/placeholder.svg"
           }
           alt={product.name}
           fill
@@ -82,29 +75,11 @@ const ProductPage = async ({
           selectedSize={selectedSize}
           selectedColor={selectedColor}
         />
-        {/* CARD INFO */}
-        <div className="flex items-center gap-2 mt-4">
-          <Image
-            src="/klarna.png"
-            alt="klarna"
-            width={50}
-            height={25}
-            className="rounded-md"
-          />
-          <Image
-            src="/cards.png"
-            alt="cards"
-            width={50}
-            height={25}
-            className="rounded-md"
-          />
-          <Image
-            src="/stripe.png"
-            alt="stripe"
-            width={50}
-            height={25}
-            className="rounded-md"
-          />
+        {/* PAYMENT BADGES */}
+        <div className="flex items-center gap-2 mt-4 text-xs font-semibold text-gray-700">
+          <span className="px-2.5 py-1 bg-pink-100 text-pink-700 rounded-md">Klarna.</span>
+          <span className="px-2.5 py-1 bg-blue-100 text-blue-700 rounded-md">Visa / MC</span>
+          <span className="px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-md">Stripe</span>
         </div>
         <p className="text-gray-500 text-xs">
           By clicking Pay Now, you agree to our{" "}

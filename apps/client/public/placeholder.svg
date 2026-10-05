@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" fill="none">
+  <rect width="600" height="800" fill="#F3F4F6"/>
+  <rect x="220" y="320" width="160" height="160" rx="16" fill="#E5E7EB"/>
+  <path d="M260 420L285 385C288 381 294 381 297 385L340 440" stroke="#9CA3AF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="330" cy="360" r="14" fill="#9CA3AF"/>
+  <text x="300" y="520" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#9CA3AF" text-anchor="middle">AkohGrid Product</text>
+</svg>
