@@ -7,7 +7,8 @@ import { CartItemsType, ShippingFormInputs } from "@repo/types";
 import { ArrowRight, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+
 
 const steps = [
   {
@@ -81,8 +82,9 @@ const steps = [
 //   },
 // ];
 
-const CartPage = () => {
+const CartContent = () => {
   const searchParams = useSearchParams();
+
   const router = useRouter();
   const [shippingForm, setShippingForm] = useState<ShippingFormInputs>();
 
@@ -228,4 +230,19 @@ const CartPage = () => {
   );
 };
 
+const CartPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center py-20 text-sm text-gray-500">
+          Loading shopping cart...
+        </div>
+      }
+    >
+      <CartContent />
+    </Suspense>
+  );
+};
+
 export default CartPage;
+

@@ -4,10 +4,10 @@ import useCartStore from "@/stores/cartStore";
 import { ProductType } from "@repo/types";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "react-toastify";
 
-const ProductInteraction = ({
+const ProductInteractionContent = ({
   product,
   selectedSize,
   selectedColor,
@@ -20,6 +20,7 @@ const ProductInteraction = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [quantity, setQuantity] = useState(1);
+
 
   const { addToCart } = useCartStore();
 
@@ -127,4 +128,17 @@ const ProductInteraction = ({
   );
 };
 
+const ProductInteraction = (props: {
+  product: ProductType;
+  selectedSize: string;
+  selectedColor: string;
+}) => {
+  return (
+    <Suspense fallback={<div className="h-10 w-full animate-pulse bg-gray-100 rounded-md" />}>
+      <ProductInteractionContent {...props} />
+    </Suspense>
+  );
+};
+
 export default ProductInteraction;
+

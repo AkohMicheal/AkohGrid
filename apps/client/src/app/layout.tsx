@@ -22,13 +22,19 @@ export const metadata: Metadata = {
     "AkohGrid is an event-driven microservices commerce platform engineered for high-availability catalog discovery, order processing, and payment orchestration.",
 };
 
+const clerkKey =
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  "pk_test_Y2xlcmsuZXhhbXBsZS5jb20k";
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={clerkKey}>
+
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}

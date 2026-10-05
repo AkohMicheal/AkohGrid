@@ -1,8 +1,9 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-const Filter = () => {
+const FilterContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -31,4 +32,13 @@ const Filter = () => {
   );
 };
 
+const Filter = () => {
+  return (
+    <Suspense fallback={<div className="h-8 my-6" />}>
+      <FilterContent />
+    </Suspense>
+  );
+};
+
 export default Filter;
+

@@ -9,6 +9,8 @@ import {
   Venus,
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+
 
 const categories = [
   {
@@ -53,7 +55,7 @@ const categories = [
   },
 ];
 
-const Categories = () => {
+const CategoriesContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -84,4 +86,13 @@ const Categories = () => {
   );
 };
 
+const Categories = () => {
+  return (
+    <Suspense fallback={<div className="h-12 bg-gray-100 rounded-lg mb-4 animate-pulse" />}>
+      <CategoriesContent />
+    </Suspense>
+  );
+};
+
 export default Categories;
+

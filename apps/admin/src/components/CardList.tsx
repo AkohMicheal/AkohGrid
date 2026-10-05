@@ -130,19 +130,34 @@ const CardList = async ({ title }: { title: string }) => {
   const token = await getToken();
 
   if (title === "Popular Products") {
-    products = await fetch(
-      `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products?limit=5&popular=true`
-    ).then((res) => res.json());
-  } else {
-    orders = await fetch(
-      `${process.env.NEXT_PUBLIC_ORDER_SERVICE_URL}/orders?limit=5`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      if (process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL) {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products?limit=5&popular=true`
+        );
+        if (res.ok) products = await res.json();
       }
-    ).then((res) => res.json());
+    } catch {
+      products = [];
+    }
+  } else {
+    try {
+      if (process.env.NEXT_PUBLIC_ORDER_SERVICE_URL) {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_ORDER_SERVICE_URL}/orders?limit=5`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.ok) orders = await res.json();
+      }
+    } catch {
+      orders = [];
+    }
   }
+
 
   return (
     <div className="">
