@@ -6,6 +6,7 @@
   "scripts": {
 
     "dev": "next dev --turbopack --port 3003",
+    "prebuild": "pnpm --filter @repo/product-db run build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
